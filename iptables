@@ -166,7 +166,7 @@ set_policy() {
 start() {
    
 upt=`cat /proc/uptime | awk '{print $1*1000}'` 
-up0="90000"
+up0="300000"
 
    if [ $upt -le $up0  ]; then $pwd/router.sh ; fi 
  

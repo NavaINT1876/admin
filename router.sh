@@ -110,7 +110,7 @@ service iptables save
 
 
 ### check
-$pwd/check.sh > $pwd/route.log  &
+$pwd/check.sh >> $pwd/route.log  &
 
 #/home/router/check.sh &
 

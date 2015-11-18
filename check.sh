@@ -8,7 +8,7 @@ pwd="/home/router"
 OLDIF1=0
 OLDIF2=0
 
- 
+d=`date` 
 
 while true; do
  
@@ -30,7 +30,7 @@ NEWIF2=1
 fi
  
 if (( ($NEWIF1!=$OLDIF1) || ($NEWIF2!=$OLDIF2) )); then
-echo "Changing routes"
+echo "Changing routes   $d"
  
 if (( ($NEWIF1==1) && ($NEWIF2==1) )); then
 echo "Both channels"
@@ -64,8 +64,8 @@ snat_local $P0_NET  "10.2.2.0/27 192.168.0.0/24
 snat $P0_NET $IP2
 fi
  
-else
-echo "Not changed"
+#else
+#echo "Not changed"
 fi
  
 OLDIF1=$NEWIF1
