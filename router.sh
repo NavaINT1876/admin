@@ -14,6 +14,7 @@ pwd="/home/router"
 
 # main script
 . $pwd/iptables_default.sh
+. $pwd/iptables_func.sh
 
 # routing ==> 2GWs <==
 
@@ -85,9 +86,9 @@ vpn_server_on
 #mac_ip 10.0.0.2 74:2f:68:52:ac:11
 
 #nat
-nat_local $P0_NET  "10.2.2.0/27 192.168.0.0/24 176.105.102.80/29"
-nat_bypassport  $P0_NET  $IP2 "49152:65534"
-nat $P0_NET $IP1
+snat_local $P0_NET  "10.2.2.0/27 192.168.0.0/24 176.105.102.80/29"
+snat_bypassport  $P0_NET  $IP2 "49152:65534"
+snat $P0_NET $IP1
 
 # if you have terrible problems with some port use this option
 ### Don`t use when it`s possible!!!
@@ -109,6 +110,7 @@ service iptables save
 
 
 ### check
+$pwd/check.sh > $pwd/route.log  &
 
 #/home/router/check.sh &
 
@@ -117,3 +119,4 @@ f=`ps uax | grep fail2ban | wc -l`
 if [ $f -eq 2 ]; then
 service fail2ban restart
 fi
+
