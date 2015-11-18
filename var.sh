@@ -35,3 +35,5 @@ TBL2="102"
 # Realtive weight of channels bandwidth
 W1="254"
 W2="1"
+
+transnet="192.168.0.0/24 10.2.2.0/27"
