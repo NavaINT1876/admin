@@ -207,17 +207,20 @@ done
 }
 
 ################# NAT enable #############################
-function nat {
-#iptables -t nat -A POSTROUTING -s $1 -o $IF1 -j MASQUERADE
-#iptables -t nat -A POSTROUTING -s $1 -o $IF2 -j MASQUERADE
-#iptables -t nat -A POSTROUTING -s $1  -j MASQUERADE
-for ips in `echo $3` ; do
+function nat_local {
+for ips in `echo $2` ; do
 iptables -t nat -A POSTROUTING -s $1 -d $ips -j MASQUERADE
 done
+}
+
+function nat {
 iptables -t nat -A POSTROUTING -s $1  -j SNAT --to-source $2
 }
 
-
+function nat_bypassport {
+iptables -t nat -A POSTROUTING -s $1 -p tcp -m multiport  --dports $3  -j SNAT --to-source $2
+iptables -t nat -A POSTROUTING -s $1 -p udp -m multiport  --dports $3  -j SNAT --to-source $2
+}
 
 ################# ICMP enable #############################
 function icmp {
@@ -251,8 +254,8 @@ for max in `echo $2`
 do
 if [ ! -z $1 ]; then
 	if [ ! -z $7 ]; then
-	iptables -t mangle -A FORWARD -s $max -p tcp   -j MARK --set-mark $1
-	iptables -t mangle -A FORWARD -s $max -p udp   -j MARK --set-mark $1
+	iptables -t mangle -A FORWARD -s $max -p tcp -m multiport ! --dports $7   -j MARK --set-mark $1
+	iptables -t mangle -A FORWARD -s $max -p udp -m multiport ! --dports $7  -j MARK --set-mark $1
 	iptables -t mangle -A POSTROUTING -d $max -p tcp -m multiport ! --sports $7   -j MARK --set-mark $1
 	iptables -t mangle -A POSTROUTING -d $max -p udp  -m multiport ! --sports $7   -j MARK --set-mark $1
 	else
@@ -295,6 +298,9 @@ tariff "5$COUNTER" 	"$a" 	"$5" 	"$6" 	"$7" 	"$8"  "$9" #minimal
 	done
 
 if [ ! -z $9 ]; then
+iptables -t mangle -A FORWARD -s $P0_NET -p tcp -m multiport  --dports $9   -j MARK --set-mark 5
+iptables -t mangle -A FORWARD -s $P0_NET -p udp -m multiport  --dports $9  -j MARK --set-mark 5
+
 iptables -t mangle -A POSTROUTING -d $P0_NET -p tcp -m multiport --sports $9   -j MARK --set-mark 5
 iptables -t mangle -A POSTROUTING -d $P0_NET -p udp  -m multiport --sports $9   -j MARK --set-mark 5
 fi

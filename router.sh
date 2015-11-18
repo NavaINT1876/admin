@@ -71,9 +71,9 @@ shaper_dev "$IF1" "100mbit"
 shaper_dev "$IF2" "100mbit"
 
 # bypass speed
-shaper $IF0 "5" "70mbit"  "6" #down
-#shaper $IF1  "5" "70mbit"  "6" #up
-#shaper $IF2  "5" "70mbit"  "6" #up
+shaper $IF0 "5" "95mbit"  "6" #down
+shaper $IF1  "5" "95mbit"  "6" #up
+shaper $IF2  "5" "95mbit"  "6" #up
 
 # port_forwarding
 .  $pwd/portforward.sh
@@ -85,7 +85,9 @@ vpn_server_on
 #mac_ip 10.0.0.2 74:2f:68:52:ac:11
 
 #nat
-nat $P0_NET $IP1 "10.2.2.0/27 192.168.0.0/24 176.105.102.80/29"
+nat_local $P0_NET  "10.2.2.0/27 192.168.0.0/24 176.105.102.80/29"
+nat_bypassport  $P0_NET  $IP2 "49152:65534"
+nat $P0_NET $IP1
 
 # if you have terrible problems with some port use this option
 ### Don`t use when it`s possible!!!
